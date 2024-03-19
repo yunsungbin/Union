@@ -50,8 +50,46 @@ public class Slot : MonoBehaviour
     }
 
     //아이템을 넣기 위한 슬롯 검사
-    //public bool AddItem(Item item)
+    public bool AddItem(Item item)
+    {
+        int slotCount = AllSlot.Count;
+
+        for(int i = 0; i < slotCount; i++)
+        {
+            SlotSystem slotSystem = AllSlot[i].GetComponent<SlotSystem>();
+
+            if (!slotSystem.isSlots())
+                continue;
+
+            if(slotSystem.ItemReturn().type == item.type && slotSystem.ItemMax(item))
+            {
+                slotSystem.AddItem(item);
+                return true;
+            }
+        }
+
+        for(int i = 0; i < slotCount; i++)
+        {
+            SlotSystem slotSystem = AllSlot[i].GetComponent<SlotSystem>();
+
+            if (slotSystem.isSlots())
+                continue;
+
+            slotSystem.AddItem(item);
+            return true;
+        }
+
+        return false;
+    }
+
+    void Init()
+    {
+        //ItemIO.Load(AllSlot);
+    }
+
+    //public SlotSystem NearDisSlot(Vector3 Pos)
     //{
+    //    float Min = 10000f;
 
     //}
 }
