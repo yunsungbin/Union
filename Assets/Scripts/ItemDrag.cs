@@ -2,56 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class ItemDrag : MonoBehaviour
+public class ItemDrag : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
-    public Transform Img;
+    [Header("UI")]
+    public Image image;
 
-    private Image EmptyImg;
-    private SlotSystem slotSystem;
+    [HideInInspector] public Transform parentAfterDrag;
 
-    Slot slot;
-
-    // Start is called before the first frame update
-    void Start()
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        slotSystem = GetComponent<SlotSystem>();
-
-        Img = GameObject.FindGameObjectWithTag("DragImg").transform;
-
-        EmptyImg = Img.GetComponent<Image>();
+        image.raycastTarget = false;
+        parentAfterDrag = transform.parent;
+        transform.SetParent(transform.root);
     }
 
-    public void Down()
+    public void OnDrag(PointerEventData eventData)
     {
-        if (!slotSystem.isSlots())
-            return;
-
-        Img.gameObject.SetActive(true);
-
-        float Size = slotSystem.transform.GetComponent<RectTransform>().sizeDelta.x;
-        EmptyImg.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, Size);
-        EmptyImg.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, Size);
-
-        EmptyImg.sprite = slotSystem.ItemReturn().DefaultImg;
-        Img.transform.position = Input.mousePosition;
-        slotSystem.UpdateInfo(true, slotSystem.DefaultImg);
-        slotSystem.text.text = "";
+        transform.position = Input.mousePosition;
     }
 
-    public void Drag()
+    public void OnEndDrag(PointerEventData eventData)
     {
-        if (!slotSystem.isSlots())
-            return;
-
-        Img.transform.position = Input.mousePosition;
-    }
-
-    public void DragEnd()
-    {
-        if (!slotSystem.isSlots())
-            return;
-
-        //slot.Swap
+        image.raycastTarget = true;
+        transform.SetParent(parentAfterDrag);
     }
 }

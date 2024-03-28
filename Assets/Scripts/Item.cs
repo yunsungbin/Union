@@ -1,32 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
-public class Item : MonoBehaviour
+[CreateAssetMenu(menuName = "Scriptable object/Item")]
+public class Item : ScriptableObject
 {
-    public enum TYPE { Ball }
+    public TileBase tile;
+    public Sprite image;
 
-    public TYPE type;
-    public Sprite DefaultImg;
-    public int MaxCount;
 
-    private Slot slot;
+    
+}
 
-    private void Awake()
-    {
-        slot = GameObject.FindGameObjectWithTag("Slot").GetComponent<Slot>();
-    }
-
-    void AddItem()
-    {
-        if (!slot.AddItem(this))
-            Debug.Log("NO");
-        else
-            CreateItem();
-    }
-
-    void CreateItem()
-    {
-        AddItem();
-    }
+public enum ItemType
+{
+    
 }
